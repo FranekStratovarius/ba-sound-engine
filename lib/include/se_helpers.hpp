@@ -1,0 +1,1 @@
+void checkAlError(const char* format);

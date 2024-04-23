@@ -1,4 +1,7 @@
+#ifndef SOUNDENGINE_HPP
+#define SOUNDENGINE_HPP
 #include <unordered_map>
+#include "AL/alc.h"
 
 namespace SoundEngine {
 	/**
@@ -27,5 +30,8 @@ namespace SoundEngine {
 		private:
 			std::unordered_map<const char*, int>
 				loadedSounds;
+			ALCcontext *context;
+			ALCdevice *device;
 	};
 }
+#endif

@@ -28,7 +28,7 @@ target("soundengine-usage-example") do
 end
 
 target("soundengine") do
-	set_license("LPGL-2.0")
+	set_license("LGPL-2.0")
 	set_kind("shared")
 	set_warnings("all", "error")
 

@@ -1,3 +1,4 @@
+// source: https://github.com/kcat/openal-soft/blob/master/examples/common/alhelpers.c
 /*
  * OpenAL Helpers
  *

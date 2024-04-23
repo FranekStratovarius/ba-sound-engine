@@ -1,12 +1,24 @@
+#ifndef SOUNDENGINE_SOUND_HPP
+#define SOUNDENGINE_SOUND_HPP
+
+#include "AL/al.h"
+
 namespace SoundEngine {
 	/**
-	* Einzelner Soundeffekt mit optionaler Position.
+	* sound
 	*/
 	class Sound {
 		public:
 			Sound();
+			Sound(const char* filename);
 			~Sound();
-			static void play(const char* filename);
+			/**
+			* loads the file into a buffer and saves the buffer-ID
+			*/
+			void load(const char* filename);
+            ALuint getBuffer();
 		private:
+			ALuint buffer;
 	};
 }
+#endif

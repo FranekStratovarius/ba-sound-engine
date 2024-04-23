@@ -1,3 +1,4 @@
+// source: https://github.com/kcat/openal-soft/blob/master/examples/common/alhelpers.h
 #ifndef ALHELPERS_H
 #define ALHELPERS_H
 

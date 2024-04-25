@@ -1,11 +1,9 @@
+#include "music_box.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "rcamera.h"
 
 #include <AL/al.h>
-#include <cstdio>
-#include "se_helpers.hpp"
-#include <test.hpp>
 #include <engine.hpp>
 #include <sound.hpp>
 #include <listener.hpp>
@@ -21,20 +19,22 @@ int main(int argc, char **argv)
 		1.0, 0.0, 0.0,
 		0.0, 1.0, 0.0
 	);
-	//se.play("iwas");
 
-	SoundEngine::Sound sound01 = SoundEngine::Sound("assets/01 Lich is Unbreakable (Expedition 1).ogg");
-	SoundEngine::Sound sound02 = SoundEngine::Sound("assets/30 Golden Win (piano).ogg");
+	// SoundEngine::Sound sound01 = SoundEngine::Sound("assets/01 Lich is Unbreakable (Expedition 1).ogg");
+	// SoundEngine::Sound sound02 = SoundEngine::Sound("assets/30 Golden Win (piano).ogg");
 
-	SoundEngine::Source source01 = SoundEngine::Source();
-	source01.set_position(10.0, 1.0, 0.0);
-	source01.set_buffer(sound01);
-	source01.play();
+	// SoundEngine::Source source01 = SoundEngine::Source();
+	// source01.set_position(10.0, 1.0, 0.0);
+	// source01.set_buffer(sound01);
+	// source01.play();
 
-	SoundEngine::Source source02 = SoundEngine::Source();
-	source02.set_buffer(sound02);
-	source02.set_position(0.0, 1.0, 0.0);
-	source02.play();
+	// SoundEngine::Source source02 = SoundEngine::Source();
+	// source02.set_buffer(sound02);
+	// source02.set_position(0.0, 1.0, 0.0);
+	// source02.play();
+
+	SoundEngine::MusicBox musicBox = SoundEngine::MusicBox();
+	musicBox.setPosition(0.0, 1.0, 0.0);
 
 	// while(1);
 	// /*

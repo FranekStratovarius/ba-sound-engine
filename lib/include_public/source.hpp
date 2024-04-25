@@ -8,7 +8,7 @@ namespace SoundEngine {
 	class Source {
 		public:
 			Source();
-			Source(SoundEngine::Sound sound);
+			Source(Sound sound);
 			~Source();
 			/**
 			* set position of source in world
@@ -18,7 +18,7 @@ namespace SoundEngine {
 				float position_y,
 				float position_z
 			);
-			void set_buffer(SoundEngine::Sound sound);
+			void set_buffer(Sound *sound);
 			void play();
 			void pause();
 			void rewind();

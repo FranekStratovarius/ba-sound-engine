@@ -33,7 +33,8 @@ target("soundengine") do
 	set_warnings("all", "error")
 
 	add_files("lib/src/**.cpp")
-	add_includedirs("lib/include", {public = true})
+	add_includedirs("lib/include")
+	add_includedirs("lib/include_public", {public = true})
 
 	add_packages("openal-soft", "libsndfile")
 	if(is_plat("linux")) then

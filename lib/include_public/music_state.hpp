@@ -9,10 +9,11 @@ namespace SoundEngine {
 		public:
 			MusicState(Source *source, const char* filename);
 			~MusicState();
-			void start();
+			virtual void start();
+			virtual MusicState* update(float delta_t);
 		private:
 			Sound *sound;
-			// no ownership over the source!
+			// no ownership, don't delete!
 			Source *source;
 	};
 }

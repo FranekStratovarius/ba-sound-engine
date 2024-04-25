@@ -24,7 +24,7 @@ namespace SoundEngine {
 		alDeleteSources(1, &source);
 	}
 
-	void Source::set_position(
+	void Source::setPosition(
 		float position_x = 0.0, float position_y = 0.0, float position_z = 0.0
 	) {
 		alGetError();
@@ -33,8 +33,9 @@ namespace SoundEngine {
 		checkAlError("SOURCE error: %s | Failed to set sound source position\n");
 	}
 
-	void Source::set_buffer(Sound *sound) {
+	void Source::setBuffer(Sound *sound) {
 		alGetError();
+		alSourceStop(source);
 		alSourcei(source, AL_BUFFER, (ALint)sound->getBuffer());
 		checkAlError("SOURCE error: %s | Failed to set sound source buffer\n");
 	}

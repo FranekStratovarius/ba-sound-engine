@@ -9,6 +9,7 @@ namespace SoundEngine {
 		public:
 			MusicBox();
 			~MusicBox();
+			void update(float delta_t);
 			void setPosition(
 				float position_x,
 				float position_y,
@@ -16,7 +17,8 @@ namespace SoundEngine {
 			);
 		private:
 			MusicState **states;
-			MusicState *current_state;
+			// don't delete, this is a pointer to one elemet of this->states!
+			MusicState *currentState;
 			Source *source;
 	};
 }

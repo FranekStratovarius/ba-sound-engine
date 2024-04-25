@@ -4,8 +4,8 @@
 
 namespace SoundEngine {
 	Listener::Listener() {
-		this->setPosition(0.0, 0.0, 0.0);
-		this->setOrientation(0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
+		setPosition(0.0, 0.0, 0.0);
+		setOrientation(0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
 	}
 
 	void Listener::update(
@@ -14,9 +14,9 @@ namespace SoundEngine {
 		float look_at_x, float look_at_y, float look_at_z,
 		float up_x, float up_y, float up_z
 	) {
-		this->setPosition(position_x, position_y, position_z);
-		this->setVelocity(velocity_x, velocity_y, velocity_z);
-		this->setOrientation(
+		setPosition(position_x, position_y, position_z);
+		setVelocity(velocity_x, velocity_y, velocity_z);
+		setOrientation(
 			look_at_x, look_at_y, look_at_z,
 			up_x, up_y, up_z
 		);

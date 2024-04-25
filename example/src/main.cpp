@@ -24,8 +24,8 @@ int main(int argc, char **argv)
 	// SoundEngine::Sound sound02 = SoundEngine::Sound("assets/30 Golden Win (piano).ogg");
 
 	// SoundEngine::Source source01 = SoundEngine::Source();
-	// source01.set_position(10.0, 1.0, 0.0);
-	// source01.set_buffer(sound01);
+	// source01.setPosition(10.0, 1.0, 0.0);
+	// source01.setBuffer(&sound01);
 	// source01.play();
 
 	// SoundEngine::Source source02 = SoundEngine::Source();
@@ -63,6 +63,7 @@ int main(int argc, char **argv)
 	// }
 
 	while (!WindowShouldClose()) {
+		musicBox.update(GetFrameTime());
 		Vector3 oldCameraPos = camera.position;
 		UpdateCamera(&camera, cameraMode);
 		Vector3 cameraVelocity = Vector3Subtract(camera.position, oldCameraPos);

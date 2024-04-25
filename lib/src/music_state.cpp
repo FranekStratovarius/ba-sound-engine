@@ -5,18 +5,20 @@
 namespace SoundEngine {
 	MusicState::MusicState(Source *source, const char* filename) {
 		this->source = source;
-		this->sound = new Sound(filename);
-		this->source->set_buffer(this->sound);
-		this->source->setLooping(true);
+		sound = new Sound(filename);
 	}
 
 	MusicState::~MusicState() {
-		delete this->sound;
+		delete sound;
 	}
 
 	void MusicState::start() {
 		source->pause();
-		source->set_buffer(this->sound);
+		source->setBuffer(sound);
 		source->play();
+	}
+
+	MusicState* MusicState::update(float delta_t) {
+		return this;
 	}
 }

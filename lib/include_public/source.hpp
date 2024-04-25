@@ -13,12 +13,12 @@ namespace SoundEngine {
 			/**
 			* set position of source in world
 			*/
-			void set_position(
+			void setPosition(
 				float position_x,
 				float position_y,
 				float position_z
 			);
-			void set_buffer(Sound *sound);
+			void setBuffer(Sound *sound);
 			void play();
 			void pause();
 			void rewind();

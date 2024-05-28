@@ -1,4 +1,4 @@
-add_requires("openal-soft", "libsndfile", "luajit", "raylib")
+add_requires("openal-soft", "libsndfile", "lua", "raylib")
 if(is_plat("linux")) then
 	add_requires("libsndio")
 end
@@ -36,7 +36,7 @@ target("soundengine") do
 	add_includedirs("lib/include")
 	add_includedirs("lib/include_public", {public = true})
 
-	add_packages("openal-soft", "libsndfile", "luajit")
+	add_packages("openal-soft", "libsndfile", "lua")
 	if(is_plat("linux")) then
 		add_packages("libsndio")
 	end

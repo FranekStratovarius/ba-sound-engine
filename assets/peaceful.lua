@@ -1,5 +1,7 @@
-print("lua loaded")
-local node = {}
+print("peaceful lua loaded")
+local node = {
+	name = "peaceful"
+}
 
 -- the update function is called periodically, normally on the beat of the music
 function node.update()
@@ -11,6 +13,8 @@ function node.update()
 		-- early return, we don't have to check other variables
 		return
 	end
+
+	next_node("combat")
 
 	-- activate layers depending on the current state of the game
 	set_layer("choir",   world.wonders > 4)

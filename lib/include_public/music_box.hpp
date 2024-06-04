@@ -1,6 +1,12 @@
 #ifndef SOUNDENGINE_MUSIC_BOX_HPP
 #define SOUNDENGINE_MUSIC_BOX_HPP
 
+extern "C" {
+	#include <lua.h>
+	#include <lualib.h>
+	#include <lauxlib.h>
+}
+
 #include "music_state.hpp"
 #include "source.hpp"
 
@@ -15,11 +21,13 @@ namespace SoundEngine {
 				float position_y,
 				float position_z
 			);
+			void setWorldVariable(const char* index, double value);
 		private:
 			MusicState **states;
 			// don't delete, this is a pointer to one elemet of this->states!
 			MusicState *currentState;
 			Source *source;
+			lua_State *L;
 	};
 }
 

@@ -1,7 +1,9 @@
-print("lua loaded")
-music_states = {
-	peaceful = require("assets.peaceful"),
-	combat = require("assets.peaceful")
-}
+-- load the modules
+local combat = require("assets.states.combat")
+local peaceful = require("assets.states.peaceful")
 
-print("lua finished loading")
+-- create the music_states table with the loaded modules
+music_states = {
+	combat,
+	peaceful,
+}

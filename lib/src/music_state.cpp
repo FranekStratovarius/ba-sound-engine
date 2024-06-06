@@ -1,3 +1,4 @@
+#include <lua.h>
 #include <stdexcept>
 #include "se_helpers.hpp"
 #include "lua_helpers.hpp"
@@ -15,6 +16,7 @@ namespace SoundEngine {
 		return ((*ptr).*func)(L);
 	}
 
+	/*
 	MusicState::MusicState(Source *source, const char* filename) {
 		this->source = source;
 		sound = new Sound(filename);
@@ -55,6 +57,14 @@ namespace SoundEngine {
 		// const char* name = luaL_checkstring(L, 1);
 		// printf("node name: %s\n", name);
 	}
+	*/
+
+	MusicState::MusicState(Source *source, lua_State *L, int table_ref) {
+		this->source = source;
+		this->L = L;
+		this->table_ref = table_ref;
+	}
+
 
 	MusicState::~MusicState() {
 		delete sound;

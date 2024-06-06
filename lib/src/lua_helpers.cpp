@@ -29,12 +29,14 @@ void print_value(lua_State* L, int idx) {
 		printf("nil");
 	else if(lua_isboolean(L, idx)) {
 		printf("%s", lua_toboolean(L,idx) ? "true" : "false");
-	// } else if(lua_isinteger(L, idx)) {
-	// 	printf("%d", (int)lua_tointeger(L, idx));
+	} else if(lua_isinteger(L, idx)) {
+		printf("%d", (int)lua_tointeger(L, idx));
 	} else if(lua_isnumber(L, idx)) {
 		printf("%f", lua_tonumber(L, idx));
 	} else if(lua_isstring(L,idx)) {
 		printf("%s", lua_tostring(L, idx));
+	} else if(lua_istable(L, idx)) {
+		printf("%p", lua_topointer(L, idx));
 	}
 }
 

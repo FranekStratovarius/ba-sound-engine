@@ -51,20 +51,39 @@ namespace SoundEngine {
 		// printf("node name: %s\n", name);
 
 		dumpstack(L);
+		unsigned long length = lua_rawlen(L, -1);
+		printf("table length: %zu\n", length);
+		states = new MusicState*[length];
 		lua_pushnil(L);
+		unsigned long counter = 0;
 		while(lua_next(L, -2) != 0){
-			// printf("next\n");
+			counter++;
+			printf("next\n");
 			// dumpstack(L);
 			print_value(L, -2);
 			printf("=");
+			if(!lua_istable(L, -1)) {
+				char error[200];
+				sprintf(error, "Variable auf Position %lli ist keine Tabelle.", lua_tointeger(L, -2));
+				throw std::runtime_error(error);
+			}
 			//value ausgeben
 			print_value(L, -1);
+			// create music state that calls the code in this table
+			int table_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+			printf(" [%i]", table_ref);
 			printf(",\n");
-			lua_pop(L, 1);
+
+			states[counter] = new MusicState(
+				source,
+				L,
+				table_ref
+			);
+			// lua_pop(L, 1);
 		}
 		// print_table(L);
 
-		states = new MusicState*[2];
+		// states = new MusicState*[2];
 		// states[0] = new MusicState(source, "assets/30 Golden Win (piano).ogg");
 		// states[1] = new MusicTransition(
 		// 	source, "assets/01 Lich is Unbreakable (Expedition 1).ogg",

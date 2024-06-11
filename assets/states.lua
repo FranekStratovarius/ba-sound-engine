@@ -7,3 +7,12 @@ music_states = {
 	combat,
 	peaceful,
 }
+
+first_state = function()
+	return states.combat
+end
+
+world = {
+	enemy_count = 0,
+	wonders = 0
+}

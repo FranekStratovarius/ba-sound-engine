@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	musicBox.setPosition(0.0, 1.0, 0.0);
 
 	// while(1);
-	/*
+	//*
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 

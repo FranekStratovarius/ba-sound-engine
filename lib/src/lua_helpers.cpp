@@ -1,6 +1,7 @@
 #include "lua_helpers.hpp"
 
 void dumpstack (lua_State *L) {
+	printf("----# dumping stack #----\n");
 	int top=lua_gettop(L);
 	for (int i=1; i <= top; i++) {
 		printf("%d\t%s\t", i, luaL_typename(L,i));
@@ -22,6 +23,7 @@ void dumpstack (lua_State *L) {
 				break;
 		}
 	}
+	printf("----# dumped stack #----\n");
 }
 
 void print_value(lua_State* L, int idx) {

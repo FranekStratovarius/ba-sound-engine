@@ -25,7 +25,7 @@ namespace SoundEngine {
 			void setLooping(bool looping);
 			void setMono(bool mono);
 		private:
-			ALuint source = 0;
+			ALuint source;
 	};
 }
 #endif

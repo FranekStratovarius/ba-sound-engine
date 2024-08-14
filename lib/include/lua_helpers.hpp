@@ -1,9 +1,7 @@
 #ifndef LUA_HELPERS_HPP
 #define LUA_HELPERS_HPP
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
+#include "lua.hpp"
 
 void dumpstack (lua_State *L);
 void print_value(lua_State* L, int idx);

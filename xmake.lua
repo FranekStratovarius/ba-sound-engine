@@ -1,4 +1,4 @@
-add_requires("openal-soft", "libsndfile", "lua", "raylib")
+add_requires("openal-soft", "libsndfile", "raylib", "lua")
 if(is_plat("linux")) then
 	add_requires("libsndio")
 end
@@ -9,13 +9,14 @@ target("soundengine-usage-example") do
 	set_license("LGPL-2.0")
 	set_kind("binary")
 	set_warnings("all", "error")
+	set_languages("cxx11")
 
 	add_files("example/src/*.cpp")
 	add_includedirs("example/include")
 
 	add_deps("soundengine")
 
-	add_packages("openal-soft", "libsndfile", "raylib")
+	add_packages("openal-soft", "libsndfile", "raylib", "lua")
 	if(is_plat("linux")) then
 		add_packages("libsndio")
 	end
@@ -31,6 +32,7 @@ target("soundengine") do
 	set_license("LGPL-2.0")
 	set_kind("shared")
 	set_warnings("all", "error")
+	set_languages("cxx11")
 
 	add_files("lib/src/**.cpp")
 	add_includedirs("lib/include")

@@ -1,8 +1,4 @@
-extern "C" {
-	#include <lua.h>
-	#include <lualib.h>
-	#include <lauxlib.h>
-}
+#include "lua.hpp"
 
 namespace SoundEngine {
 	class LuaScripter {
@@ -12,7 +8,6 @@ namespace SoundEngine {
 		private:
 			int next_node(lua_State *L);
 			int set_layer(lua_State *L);
-			int status;
 			lua_State *L;
 	};
 }

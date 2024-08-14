@@ -30,14 +30,14 @@ namespace SoundEngine {
 		if(result != LUA_OK) {
 			//error message
 			char error[200];
-			sprintf(error, "could not load lua script: %s", lua_tostring(L, -1));
+			snprintf(error, 200, "could not load lua script: %s", lua_tostring(L, -1));
 			throw std::runtime_error(error);
 		} else {
 			// of load was ok, execute the lua script
 			int loadresult = lua_pcall(L, 0, LUA_MULTRET, 0);
 			if(loadresult != LUA_OK) {
 				char error[200];
-				sprintf(error, "could not execute lua script: %s", lua_tostring(L, -1));
+				snprintf(error, 200, "could not execute lua script: %s", lua_tostring(L, -1));
 				throw std::runtime_error(error);
 			}
 		}
@@ -65,8 +65,9 @@ namespace SoundEngine {
 			printf("# next\n");
 			if(!lua_istable(L, -1)) {
 				char error[200];
-				sprintf(
+				snprintf(
 					error,
+					200,
 					"variable at position %lli is not a table.",
 					lua_tointeger(L, -2)
 				);

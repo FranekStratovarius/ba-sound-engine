@@ -1,4 +1,4 @@
-#include <lua.h>
+#include <lua.hpp>
 #include <stdexcept>
 #include "se_helpers.hpp"
 
@@ -7,6 +7,7 @@
 namespace SoundEngine {
 
 	MusicState::MusicState(Source *source, lua_State *L, int table_ref) {
+		this->nextState = nullptr;
 		this->source = source;
 		this->L = L;
 		this->table_ref = table_ref;
@@ -36,8 +37,9 @@ namespace SoundEngine {
 			int line = ar.currentline;
 
 			char error[200];
-			sprintf(
+			snprintf(
 				error,
+				200,
 				"lua [%s] %i: value passed to next_node is no music state",
 				ar.source,
 				line

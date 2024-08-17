@@ -119,8 +119,7 @@ namespace SoundEngine {
 		MusicState* newCurrentState = currentState->update(delta_t);
 		if(currentState != newCurrentState) {
 			// save pointer to class instance https://stackoverflow.com/a/32416597
-			*static_cast<MusicState**>(lua_getextraspace(L)) = currentState;
-			printf("new state\n");
+			*static_cast<MusicState**>(lua_getextraspace(L)) = newCurrentState;
 			currentState = newCurrentState;
 			currentState->start();
 		}
@@ -132,11 +131,29 @@ namespace SoundEngine {
 		source->setPosition(position_x, position_y, position_z);
 	}
 
-	void MusicBox::setWorldVariable(const char* index, double value) {
+	void MusicBox::setWorldVariable(WorldVariable variable) {
+		printf("setting %s to %f\n", variable.name, variable.value);
 		lua_getglobal(L, "world");
-		lua_pushstring(L, index);
-		lua_pushnumber(L, value);
+		lua_pushstring(L, variable.name);
+		lua_pushnumber(L, variable.value);
 		lua_settable(L, -3);
 		lua_pop(L,-1);
+	}
+
+	std::vector<WorldVariable> MusicBox::getWorldVariables() {
+		lua_getglobal(L, "world");
+		std::vector<WorldVariable> variables;
+		// iterate over table
+		lua_pushnil(L);
+		while(lua_next(L, -2) != 0){
+			variables.push_back(
+				WorldVariable {
+					.name = lua_tostring(L, -2),
+					.value = lua_tonumber(L, -1),
+				}
+			);
+			lua_pop(L, 1);
+		}
+		return variables;
 	}
 }

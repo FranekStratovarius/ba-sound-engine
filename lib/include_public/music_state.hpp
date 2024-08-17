@@ -1,7 +1,7 @@
 #ifndef SOUNDENGINE_MUSIC_STATE_HPP
 #define SOUNDENGINE_MUSIC_STATE_HPP
 
-#include "lua.hpp"
+#include <lua.hpp>
 
 #include "sound.hpp"
 #include "source.hpp"
@@ -13,6 +13,7 @@ namespace SoundEngine {
 			~MusicState();
 			virtual void start();
 			virtual MusicState* update(float delta_t);
+			void resetNextState();
 
 			int next_node(lua_State *L);
 			int set_layer(lua_State *L);
@@ -23,6 +24,8 @@ namespace SoundEngine {
 			MusicState* nextState;
 			int table_ref;
 			lua_State *L;
+			float period;
+			float current_time;
 	};
 }
 

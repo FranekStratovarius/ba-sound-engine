@@ -1,10 +1,16 @@
 #ifndef SOUNDENGINE_MUSIC_BOX_HPP
 #define SOUNDENGINE_MUSIC_BOX_HPP
 
-#include "lua.hpp"
+#include <vector>
+#include <lua.hpp>
 
 #include "music_state.hpp"
 #include "source.hpp"
+
+typedef struct {
+	const char* name;
+	double value;
+} WorldVariable;
 
 namespace SoundEngine {
 	class MusicBox {
@@ -17,7 +23,8 @@ namespace SoundEngine {
 				float position_y,
 				float position_z
 			);
-			void setWorldVariable(const char* index, double value);
+			void setWorldVariable(WorldVariable variable);
+			std::vector<WorldVariable> getWorldVariables();
 		private:
 			MusicState **states;
 			// don't delete, this is a pointer to one elemet of this->states!

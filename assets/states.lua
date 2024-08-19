@@ -8,10 +8,11 @@ music_states = {
 	peaceful,
 }
 
-first_state = function()
-	return states.combat
-end
+-- define first state
+first_state = "peaceful"
 
+-- define world variables needed for this music box
+-- and their initial values
 world = {
 	enemy_count = 0,
 	wonders = 0

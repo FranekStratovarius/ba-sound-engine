@@ -52,6 +52,11 @@ namespace SoundEngine {
 		lua_pushcfunction(L, &dispatch<&MusicState::set_layer>);
 		lua_setglobal(L, "set_layer");
 
+		// get first state
+		lua_getglobal(L, "first_state");
+		const char* first_state = lua_tostring(L, -1);
+		lua_pop(L, 1);
+
 		lua_getglobal(L, "music_states");
 		
 		// initialize array of music states
@@ -94,15 +99,13 @@ namespace SoundEngine {
 			lua_settable(L, -3);
 			// pop the table music_states
 			lua_pop(L, 1);
+			// save first state
+			if(state_name == first_state) {
+				currentState = static_cast<MusicState*>(states[counter]);
+			}
 
 			counter++;
 		}
-
-		// start with first state
-		lua_getglobal(L, "first_state");
-		lua_call(L, 0, 1);
-		printf("first_state: %p\n", lua_touserdata(L, -1));
-		currentState = static_cast<MusicState*>(lua_touserdata(L, -1));
 		// save pointer to class instance https://stackoverflow.com/a/32416597
 		*static_cast<MusicState**>(lua_getextraspace(L)) = currentState;
 		currentState->start();

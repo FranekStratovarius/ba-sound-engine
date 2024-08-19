@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	for (WorldVariable variable : variables) {
 		printf("[%s] %f\n", variable.name, variable.value);
 	}
-	int selected = 0;
+	unsigned int selected = 0;
 
 	// while(1);
 	//*
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 
 			// variables ui
 			std::string output = "";
-			for (int i = 0; i < variables.size(); i++) {
+			for (unsigned int i = 0; i < variables.size(); i++) {
 				if (i == selected) {
 					output += "[";
 				}

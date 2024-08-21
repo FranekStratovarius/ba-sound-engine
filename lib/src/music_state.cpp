@@ -25,17 +25,23 @@ namespace SoundEngine {
 		lua_pop(L, 1);
 
 		// get list of layers
-		// lua_getfield(L, -1, "layers");
-		// lua_pushnil(L);
-		// while(lua_next(L, -2) != 0){
-		// 	const char* key = lua_tostring(L, -2);
-		// 	const char* filename = lua_tostring(L, -1);
-		// 	// and load them
-		// 	Sound sound = Sound(filename);
-		// 	// put them into a hashmap
-		// 	sounds.insert({key, sound});
-		// }
-		// lua_pop(L, 1);
+		lua_getfield(L, -1, "layers");
+		printf("isnil: %i\n", lua_isnil(L, -1));
+		if(lua_isnil(L, -1) != 1) {
+			lua_pushnil(L);
+			while(lua_next(L, -2) != 0){
+				printf("loading next layer\n");
+				const char* key = lua_tostring(L, -2);
+				printf("key: %s\n", key);
+				const char* filename = lua_tostring(L, -1);
+				printf("filename: %s\n", filename);
+				// and load them
+				Sound sound = Sound(filename);
+				// put them into a hashmap
+				sounds.insert({key, sound});
+				lua_pop(L, 1);
+			}
+		}
 
 		lua_getfield(L, -1, "bpm");
 		period = 60.0/lua_tonumber(L, -1);

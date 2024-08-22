@@ -18,6 +18,7 @@ namespace SoundEngine {
 		checkAlError("SOURCE error: %s | Failed to generate sound source\n");
 		alSourcei(source, AL_BUFFER, (ALint)sound.getBuffer());
 		checkAlError("SOURCE error: %s | Failed to set sound source buffer\n");
+		this->setPosition();
 	}
 
 	Source::~Source() {
@@ -25,7 +26,7 @@ namespace SoundEngine {
 	}
 
 	void Source::setPosition(
-		float position_x = 0.0, float position_y = 0.0, float position_z = 0.0
+		float position_x, float position_y, float position_z
 	) {
 		alGetError();
 		ALfloat sourcePos[] = {position_x, position_y, position_z};

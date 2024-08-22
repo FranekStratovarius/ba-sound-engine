@@ -14,9 +14,9 @@ namespace SoundEngine {
 			* set position of source in world
 			*/
 			void setPosition(
-				float position_x,
-				float position_y,
-				float position_z
+				float position_x = 0.0,
+				float position_y = 0.0,
+				float position_z = 0.0
 			);
 			void setBuffer(Sound *sound);
 			void play();

@@ -11,8 +11,7 @@
 #include <source.hpp>
 #include <string>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	SoundEngine::Engine se = SoundEngine::Engine();
 	SoundEngine::Listener listener = SoundEngine::Listener();
 	listener.update(

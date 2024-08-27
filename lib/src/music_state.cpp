@@ -42,6 +42,7 @@ namespace SoundEngine {
 				lua_pop(L, 1);
 			}
 		}
+		lua_pop(L, 1);
 
 		lua_getfield(L, -1, "bpm");
 		period = 60.0/lua_tonumber(L, -1);

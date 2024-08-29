@@ -13,7 +13,9 @@ namespace SoundEngine {
 			MusicState(Source *source, lua_State *L, int table_ref);
 			~MusicState();
 			virtual void start();
-			virtual MusicState* update(float delta_t);
+			void loadBuffer();
+			void swapBuffer();
+			virtual MusicState* update();
 			int getNumberOfLayers();
 
 			int next_node(lua_State *L);

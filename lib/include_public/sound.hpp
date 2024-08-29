@@ -5,6 +5,8 @@
 #include "alhelpers.hpp"
 #include "sndfile.h"
 
+#include "source.hpp"
+
 enum FormatType {
 	Int16,
 	Float,
@@ -18,17 +20,12 @@ namespace SoundEngine {
 	*/
 	class Sound {
 		public:
-			Sound();
-			Sound(const char* filename);
+			Sound(const char* filename, ALuint source);
 			~Sound();
-			/**
-			* loads the file into a buffer and saves the buffer-ID
-			*/
-			void load(const char* filename);
-            ALuint getBuffer();
+			void reset_track();
+			void unload_previous_buffer();
+			void load_next_buffer();
 		private:
-			ALuint buffer;
-
 			ALuint source;
 			void *small_buffer;
 			int frames_to_load;
@@ -43,7 +40,7 @@ namespace SoundEngine {
 			unsigned int number_of_buffers = 2;
 			ALuint buffers[2];
 
-			unsigned int bufferctr = 118;
+			unsigned int bufferctr = 0;
 			unsigned int bufferswap = 0;
 
 			unsigned long song_memory_size;

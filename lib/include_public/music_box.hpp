@@ -17,7 +17,7 @@ namespace SoundEngine {
 		public:
 			MusicBox();
 			~MusicBox();
-			void update(float delta_t);
+			void update();
 			void setPosition(
 				float position_x,
 				float position_y,

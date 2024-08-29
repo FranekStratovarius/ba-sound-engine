@@ -1,6 +1,6 @@
 local node = {
 	name = "combat",
-	track = "assets/01 Lich is Unbreakable (Expedition 1).ogg",
+	track = "assets/tracks/01-1-start_loop.ogg",
 	-- layers = {
 	-- 	base = "assets/base.ogg",
 	-- 	choir = "assets/choir.ogg",
@@ -12,6 +12,7 @@ local node = {
 
 -- the update function is called periodically, normally on the beat of the music
 function node.update()
+	print("update combat")
 	-- values set from c++ code will be saved in the world table
 	if world.enemy_count <= 0 then
 		-- the next_node function changes the state of the music box

@@ -2,14 +2,13 @@
 #define SOUNDENGINE_SOURCE_HPP
 
 #include "AL/al.h"
-#include "sound.hpp"
 
 namespace SoundEngine {
 	class Source {
 		public:
 			Source();
-			Source(Sound sound);
 			~Source();
+			ALuint getSource();
 			/**
 			* set position of source in world
 			*/
@@ -18,7 +17,10 @@ namespace SoundEngine {
 				float position_y = 0.0,
 				float position_z = 0.0
 			);
-			void setBuffer(Sound *sound);
+			// void setBuffer(Sound *sound);
+			void queueBuffer(ALuint* buffer);
+			void unqueueBuffers(int n);
+			int getBuffersProcessed();
 			void play();
 			void pause();
 			void rewind();

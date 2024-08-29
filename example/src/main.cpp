@@ -10,6 +10,7 @@
 #include <listener.hpp>
 #include <source.hpp>
 #include <string>
+#include <unistd.h>
 
 int main(int argc, char **argv) {
 	SoundEngine::Engine se = SoundEngine::Engine();
@@ -43,12 +44,15 @@ int main(int argc, char **argv) {
 	}
 	unsigned int selected = 0;
 
-	// while(1);
+	// while(1) {
+	// 	usleep(100 * 1000);
+	// 	musicBox.update(GetFrameTime());
+	// }
 	//*
-	// const int screenWidth = 800;
-	// const int screenHeight = 450;
-	const int screenWidth = GetScreenWidth();
-	const int screenHeight = GetScreenHeight();
+	const int screenWidth = 800;
+	const int screenHeight = 450;
+	// const int screenWidth = GetScreenWidth();
+	// const int screenHeight = GetScreenHeight();
 
 	InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera first person");
 
@@ -63,7 +67,7 @@ int main(int argc, char **argv) {
 	int cameraMode = CAMERA_FIRST_PERSON;
 
 	DisableCursor();
-	ToggleFullscreen();
+	// ToggleFullscreen();
 
 	SetTargetFPS(60);
 
@@ -128,6 +132,7 @@ int main(int argc, char **argv) {
 	}
 
 	CloseWindow();
+	// */
 
 	return 0;
 }

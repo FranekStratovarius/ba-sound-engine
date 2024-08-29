@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "lua.h"
 #include "se_helpers.hpp"
+#include "AL/al.h"
 
 #include "music_state.hpp"
 
@@ -36,7 +37,7 @@ namespace SoundEngine {
 				const char* filename = lua_tostring(L, -1);
 				printf("filename: %s\n", filename);
 				// and load them
-				Sound sound = Sound(filename);
+				Sound sound = Sound(filename, source->getSource());
 				// put them into a hashmap
 				sounds.insert({key, sound});
 				lua_pop(L, 1);
@@ -50,7 +51,7 @@ namespace SoundEngine {
 		lua_pop(L, 1);
 		printf("loading track: %s with %f\n", filename, period);
 
-		sound = new Sound(filename);
+		sound = new Sound(filename, source->getSource());
 	}
 
 	MusicState::~MusicState() {
@@ -58,16 +59,23 @@ namespace SoundEngine {
 	}
 
 	void MusicState::start() {
-		source->pause();
-		source->setBuffer(sound);
 		source->play();
 	}
 
-	MusicState* MusicState::update(float delta_t) {
-		current_time += delta_t;
-		// printf("update: %f\n", current_time);
-		if (current_time > period) {
-			current_time = fmod(current_time, period);
+	void MusicState::loadBuffer() {
+		sound->load_next_buffer();
+	}
+
+	void MusicState::swapBuffer() {
+		sound->unload_previous_buffer();
+		sound->load_next_buffer();
+	}
+
+	MusicState* MusicState::update() {
+		int buffers_processed = source->getBuffersProcessed();
+		// For each processed buffer, remove it from the source queue, read the next chunk of
+		// audio data from the file, fill the buffer with new data, and add it to the source queue
+		if(buffers_processed > 0) {
 			// run update function from lua state
 			lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
 			lua_getfield(L, -1, "update");
@@ -77,11 +85,16 @@ namespace SoundEngine {
 		// clear nextState and current_time for reuse so this state is
 		// later restarted fresh
 		if (nextState != nullptr) {
+			sound->reset_track();
 			MusicState *switcheroo = nextState;
 			nextState = nullptr;
 			current_time = 0;
 			return switcheroo;
 		} else {
+			if (buffers_processed > 0) {
+				sound->unload_previous_buffer();
+				sound->load_next_buffer();
+			}
 			return this;
 		}
 	}

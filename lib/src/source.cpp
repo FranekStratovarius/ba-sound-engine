@@ -1,28 +1,22 @@
+#include "AL/al.h"
 #include "se_helpers.hpp"
 #include "source.hpp"
+#include <cstdio>
 
 namespace SoundEngine {
 	Source::Source() {
 		/* Create the source to play the sound with. */
 		source = 0;
 		alGenSources(1, &source);
-		alSourcei(source, AL_LOOPING, AL_TRUE);
 		checkAlError("SOURCE error: %s | Failed to setup sound source\n");
-	}
-
-	Source::Source(Sound sound) {
-		/* Create the source to play the sound with. */
-		alGetError();
-		source = 0;
-		alGenSources(1, &source);
-		checkAlError("SOURCE error: %s | Failed to generate sound source\n");
-		alSourcei(source, AL_BUFFER, (ALint)sound.getBuffer());
-		checkAlError("SOURCE error: %s | Failed to set sound source buffer\n");
-		this->setPosition();
 	}
 
 	Source::~Source() {
 		alDeleteSources(1, &source);
+	}
+
+	ALuint Source::getSource() {
+		return source;
 	}
 
 	void Source::setPosition(
@@ -33,12 +27,21 @@ namespace SoundEngine {
 		alSourcefv(source, AL_POSITION, sourcePos);
 		checkAlError("SOURCE error: %s | Failed to set sound source position\n");
 	}
+	
+	void Source::queueBuffer(ALuint* buffer) {
+		alSourceQueueBuffers(source, 1, buffer);
+	}
 
-	void Source::setBuffer(Sound *sound) {
-		alGetError();
-		alSourceStop(source);
-		alSourcei(source, AL_BUFFER, (ALint)sound->getBuffer());
-		checkAlError("SOURCE error: %s | Failed to set sound source buffer\n");
+	void Source::unqueueBuffers(int n) {
+		ALuint uiBuffer = 0;
+		alSourceUnqueueBuffers(source, 1, &uiBuffer);
+		printf("unloaded buffer: %i\n", uiBuffer);
+	}
+
+	int Source::getBuffersProcessed() {
+		int buffers_processed = 0;
+		alGetSourcei(source, AL_BUFFERS_PROCESSED, &buffers_processed);
+		return buffers_processed;
 	}
 
 	void Source::play() {

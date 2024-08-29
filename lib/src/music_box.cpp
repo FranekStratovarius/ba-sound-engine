@@ -108,6 +108,9 @@ namespace SoundEngine {
 		}
 		// save pointer to class instance https://stackoverflow.com/a/32416597
 		*static_cast<MusicState**>(lua_getextraspace(L)) = currentState;
+		// only load buffers of the first state
+		currentState->loadBuffer();
+		currentState->loadBuffer();
 		currentState->start();
 	}
 
@@ -118,13 +121,13 @@ namespace SoundEngine {
 		lua_close(L);
 	}
 
-	void MusicBox::update(float delta_t) {
-		MusicState* newCurrentState = currentState->update(delta_t);
+	void MusicBox::update() {
+		MusicState* newCurrentState = currentState->update();
 		if(currentState != newCurrentState) {
 			// save pointer to class instance https://stackoverflow.com/a/32416597
 			*static_cast<MusicState**>(lua_getextraspace(L)) = newCurrentState;
 			currentState = newCurrentState;
-			currentState->start();
+			currentState->swapBuffer();
 		}
 	}
 

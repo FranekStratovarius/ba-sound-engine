@@ -24,6 +24,7 @@ void checkAlError(const char* format) {
 				snprintf(error_string, 30, "%i", error);
 		}
 		printf(buffer, format, error_string);
+		printf("OpenAL error: %s\n", alGetString(error));
 		snprintf(buffer, 100, format, error_string);
 		throw std::runtime_error(buffer);
 	}

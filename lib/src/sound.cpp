@@ -1,58 +1,30 @@
+#include <cstring>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "sndfile.h"
-
 #include "AL/al.h"
 #include "AL/alext.h"
-
-#include "alhelpers.hpp"
+#include "se_helpers.hpp"
 
 #include "sound.hpp"
 
-enum FormatType {
-	Int16,
-	Float,
-	IMA4,
-	MSADPCM
-};
-
 namespace SoundEngine {
-	Sound::Sound() {}
-
-	Sound::Sound(const char* filename) {
-		load(filename);
-	}
-
-	Sound::~Sound() {
-		alDeleteBuffers(1, &buffer);
-	}
-
-	// source: https://github.com/kcat/openal-soft/blob/master/examples/alplay.c
-	void Sound::load(const char* filename) {
-		enum FormatType sample_format = Int16;
-		ALint byteblockalign = 0;
-		ALint splblockalign = 0;
+	Sound::Sound(const char* filename, ALuint source) {
+		this->source = source;
 		sf_count_t num_frames;
-		ALenum err, format;
-		ALsizei num_bytes;
 		SNDFILE *sndfile;
-		SF_INFO sfinfo;
-		void *membuf;
 
 		/* Open the audio file and check that it's usable. */
 		sndfile = sf_open(filename, SFM_READ, &sfinfo);
 		if(!sndfile) {
 			fprintf(stderr, "Could not open audio in %s: %s\n", filename, sf_strerror(sndfile));
-			buffer = 0;
 			return;
 		}
 		if(sfinfo.frames < 1) {
 			fprintf(stderr, "Bad sample count in %s (%" PRId64 ")\n", filename, sfinfo.frames);
 			sf_close(sndfile);
-			buffer = 0;
 			return;
 		}
 
@@ -179,19 +151,25 @@ namespace SoundEngine {
 		if(!format) {
 			fprintf(stderr, "Unsupported channel count: %d\n", sfinfo.channels);
 			sf_close(sndfile);
-			buffer = 0;
 			return;
 		}
 
 		if(sfinfo.frames/splblockalign > (sf_count_t)(INT_MAX/byteblockalign)) {
 			fprintf(stderr, "Too many samples in %s (%" PRId64 ")\n", filename, sfinfo.frames);
 			sf_close(sndfile);
-			buffer = 0;
 			return;
 		}
 
 		/* Decode the whole audio file to a buffer. */
 		membuf = malloc((size_t)(sfinfo.frames / splblockalign * byteblockalign));
+		song_memory_size = (size_t)(sfinfo.frames / splblockalign * byteblockalign);
+		printf(
+			"[init] %zu\n%lli\n%i\n%i\n",
+			(size_t)(sfinfo.frames / splblockalign * byteblockalign),
+			sfinfo.frames,
+			splblockalign,
+			byteblockalign
+		);
 
 		if(sample_format == Int16)
 			num_frames = sf_readf_short(sndfile, reinterpret_cast<short int*>(membuf), sfinfo.frames);
@@ -207,7 +185,6 @@ namespace SoundEngine {
 			free(membuf);
 			sf_close(sndfile);
 			fprintf(stderr, "Failed to read samples in %s (%" PRId64 ")\n", filename, num_frames);
-			buffer = 0;
 			return;
 		}
 		num_bytes = (ALsizei)(num_frames / splblockalign * byteblockalign);
@@ -215,30 +192,70 @@ namespace SoundEngine {
 		printf("Loading: %s (%s, %dhz)\n", filename, FormatName(format), sfinfo.samplerate);
 		fflush(stdout);
 
-		/* Buffer the audio data into a new buffer object, then free the data and
-		* close the file.
-		*/
-		buffer = 0;
-		alGenBuffers(1, &buffer);
-		if(splblockalign > 1)
-			alBufferi(buffer, AL_UNPACK_BLOCK_ALIGNMENT_SOFT, splblockalign);
-		alBufferData(buffer, format, membuf, num_bytes, sfinfo.samplerate);
-
-		free(membuf);
+		alGenBuffers(number_of_buffers, buffers);
 		sf_close(sndfile);
+
+		double bpm = 120.0;
+		double seconds_to_load = (1.0 / bpm) * 60.0 * 4.0;
+		frames_to_load = seconds_to_load * sfinfo.samplerate;
+		small_buffer = malloc(
+			(size_t)(frames_to_load / splblockalign * byteblockalign)
+		);
+	};
+
+	Sound::~Sound() {
+		free(membuf);
+		free(small_buffer);
 
 		/* Check if an error occurred, and clean up if so. */
 		err = alGetError();
 		if(err != AL_NO_ERROR) {
 			fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
-			if(buffer && alIsBuffer(buffer))
-				alDeleteBuffers(1, &buffer);
-			buffer = 0;
-			return;
+			for(unsigned int i = 0; i < number_of_buffers; i++) {
+				if(buffers[i] && alIsBuffer(buffers[i])) {
+					alDeleteBuffers(1, &buffers[i]);
+				}
+			}
 		}
 	}
 
-	ALuint Sound::getBuffer() {
-		return buffer;
+	void Sound::reset_track() {
+		bufferctr = 0;
+	}
+
+	void Sound::unload_previous_buffer() {
+		// Remove the buffer from the queue (uiBuffer contains the buffer ID for the dequeued buffer)
+		ALuint uiBuffer = 0;
+		alSourceUnqueueBuffers(source, 1, &uiBuffer);
+		printf("unloaded buffer: %i\n", uiBuffer);
+	}
+
+	void Sound::load_next_buffer() {
+		printf("loading %i into buffer %i (source: %i)\n", bufferctr, bufferswap, source);
+		printf("small_buffer: %u, memory: %lu\n", (frames_to_load / splblockalign * byteblockalign) * bufferctr, song_memory_size);
+		if((size_t)(frames_to_load / splblockalign * byteblockalign) * (bufferctr + 1) > song_memory_size) {
+			bufferctr = 0;
+		}
+		memcpy(
+			small_buffer,
+			((char*)membuf) + (size_t)(frames_to_load / splblockalign * byteblockalign) * bufferctr,
+			(size_t)(frames_to_load / splblockalign * byteblockalign)
+		);
+		bufferctr++;
+
+		if(splblockalign > 1)
+			alBufferi(buffers[bufferswap], AL_UNPACK_BLOCK_ALIGNMENT_SOFT, splblockalign);
+		alBufferData(
+			buffers[bufferswap],
+			format,
+			small_buffer,
+			(size_t)(frames_to_load / splblockalign * byteblockalign),
+			sfinfo.samplerate
+		);
+		alSourcePause(source);
+		alSourceQueueBuffers(source, 1, &buffers[bufferswap]);
+		checkAlError("source error : %i | can't queue buffer\n");
+		alSourcePlay(source);
+		bufferswap = (bufferswap + 1) % number_of_buffers;
 	}
 }

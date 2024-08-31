@@ -1,6 +1,6 @@
 local node = {
 	name = "combat",
-	track = "assets/tracks/01-1-start_loop.ogg",
+	track = "assets/tracks/05-5-loop.ogg",
 	-- layers = {
 	-- 	base = "assets/base.ogg",
 	-- 	choir = "assets/choir.ogg",

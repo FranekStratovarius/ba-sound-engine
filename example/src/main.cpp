@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose()) {
-		musicBox.update(GetFrameTime());
+		musicBox.update();
 		Vector3 oldCameraPos = camera.position;
 		UpdateCamera(&camera, cameraMode);
 		Vector3 cameraVelocity = Vector3Subtract(camera.position, oldCameraPos);

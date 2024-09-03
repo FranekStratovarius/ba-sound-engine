@@ -1,6 +1,7 @@
 #include "music_box.hpp"
 #include "music_state.hpp"
 #include "music_transition.hpp"
+#include "se_helpers.hpp"
 #include "lua_helpers.hpp"
 #include <cstdio>
 #include <lua.h>
@@ -47,9 +48,9 @@ namespace SoundEngine {
 		lua_setglobal(L, "states");
 
 		// register c functions in lua
-		lua_pushcfunction(L, &dispatch<&MusicState::next_node>);
+		lua_pushcfunction(L, &dispatch<&MusicState::nextNode>);
 		lua_setglobal(L, "next_node");
-		lua_pushcfunction(L, &dispatch<&MusicState::set_layer>);
+		lua_pushcfunction(L, &dispatch<&MusicState::setLayer>);
 		lua_setglobal(L, "set_layer");
 
 		// get first state
@@ -87,7 +88,6 @@ namespace SoundEngine {
 			int table_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 			// create music state that calls the code in this table
 			states[counter] = new MusicState(
-				source,
 				L,
 				table_ref
 			);
@@ -109,9 +109,12 @@ namespace SoundEngine {
 		// save pointer to class instance https://stackoverflow.com/a/32416597
 		*static_cast<MusicState**>(lua_getextraspace(L)) = currentState;
 		// only load buffers of the first state
-		currentState->loadBuffer();
-		currentState->loadBuffer();
-		currentState->start();
+
+		ALuint* buffer = currentState->getNextBuffer();
+		source->queueBuffer(buffer);
+		buffer = currentState->getNextBuffer();
+		source->queueBuffer(buffer);
+		alSourcePlay(source->getSource());
 	}
 
 	MusicBox::~MusicBox() {
@@ -122,12 +125,18 @@ namespace SoundEngine {
 	}
 
 	void MusicBox::update() {
-		MusicState* newCurrentState = currentState->update();
-		if(currentState != newCurrentState) {
-			// save pointer to class instance https://stackoverflow.com/a/32416597
-			*static_cast<MusicState**>(lua_getextraspace(L)) = newCurrentState;
-			currentState = newCurrentState;
-			currentState->swapBuffer();
+		int buffers_processed = source->getBuffersProcessed();
+		if(buffers_processed > 0) {
+			MusicState* newCurrentState = currentState->update();
+			if(currentState != newCurrentState) {
+				// save pointer to class instance https://stackoverflow.com/a/32416597
+				*static_cast<MusicState**>(lua_getextraspace(L)) = newCurrentState;
+				currentState = newCurrentState;
+			}
+
+			source->unqueueBuffers(1);
+			ALuint* buffer = currentState->getNextBuffer();
+			source->queueBuffer(buffer);
 		}
 	}
 

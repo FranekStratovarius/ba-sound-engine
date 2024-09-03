@@ -10,21 +10,18 @@
 namespace SoundEngine {
 	class MusicState {
 		public:
-			MusicState(Source *source, lua_State *L, int table_ref);
+			MusicState(lua_State *L, int table_ref);
 			~MusicState();
-			virtual void start();
-			void loadBuffer();
-			void swapBuffer();
-			virtual MusicState* update();
+			void start();
+			ALuint* getNextBuffer();
+			MusicState* update();
 			int getNumberOfLayers();
 
-			int next_node(lua_State *L);
-			int set_layer(lua_State *L);
+			int nextNode(lua_State *L);
+			int setLayer(lua_State *L);
 		private:
 			std::unordered_map<const char*, Sound> sounds;
 			Sound *sound;
-			// no ownership, don't delete!
-			Source *source;
 			MusicState* nextState;
 			int table_ref;
 			lua_State *L;

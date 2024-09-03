@@ -11,9 +11,8 @@
 
 namespace SoundEngine {
 
-	MusicState::MusicState(Source *source, lua_State *L, int table_ref) {
+	MusicState::MusicState(lua_State *L, int table_ref) {
 		this->nextState = nullptr;
-		this->source = source;
 		this->L = L;
 		this->table_ref = table_ref;
 		this->current_time = 0;
@@ -37,7 +36,7 @@ namespace SoundEngine {
 				const char* filename = lua_tostring(L, -1);
 				printf("filename: %s\n", filename);
 				// and load them
-				Sound sound = Sound(filename, source->getSource());
+				Sound sound = Sound(filename);
 				// put them into a hashmap
 				sounds.insert({key, sound});
 				lua_pop(L, 1);
@@ -51,50 +50,33 @@ namespace SoundEngine {
 		lua_pop(L, 1);
 		printf("loading track: %s with %f\n", filename, period);
 
-		sound = new Sound(filename, source->getSource());
+		sound = new Sound(filename);
 	}
 
 	MusicState::~MusicState() {
 		delete sound;
 	}
 
-	void MusicState::start() {
-		source->play();
-	}
-
-	void MusicState::loadBuffer() {
-		sound->load_next_buffer();
-	}
-
-	void MusicState::swapBuffer() {
-		sound->unload_previous_buffer();
-		sound->load_next_buffer();
+	ALuint* MusicState::getNextBuffer() {
+		return sound->getNextBuffer();
 	}
 
 	MusicState* MusicState::update() {
-		int buffers_processed = source->getBuffersProcessed();
-		// For each processed buffer, remove it from the source queue, read the next chunk of
-		// audio data from the file, fill the buffer with new data, and add it to the source queue
-		if(buffers_processed > 0) {
-			// run update function from lua state
-			lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
-			lua_getfield(L, -1, "update");
-			lua_call(L, 0, 0);
-			lua_pop(L, 1);
-		}
+		// run update function from lua state
+		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
+		lua_getfield(L, -1, "update");
+		lua_call(L, 0, 0);
+		lua_pop(L, 1);
+		
 		// clear nextState and current_time for reuse so this state is
 		// later restarted fresh
 		if (nextState != nullptr) {
-			sound->reset_track();
+			sound->resetTrack();
 			MusicState *switcheroo = nextState;
 			nextState = nullptr;
 			current_time = 0;
 			return switcheroo;
 		} else {
-			if (buffers_processed > 0) {
-				sound->unload_previous_buffer();
-				sound->load_next_buffer();
-			}
 			return this;
 		}
 	}
@@ -106,7 +88,7 @@ namespace SoundEngine {
 	/*
 		set next node from lua
 	*/
-	int MusicState::next_node(lua_State *L) {
+	int MusicState::nextNode(lua_State *L) {
 		if(!lua_islightuserdata(L, 1)) {
 			lua_Debug ar;
 			lua_getstack(L, 1, &ar);
@@ -133,7 +115,7 @@ namespace SoundEngine {
 	/*
 		activate/deactivate stem layer from lua
 	*/
-	int MusicState::set_layer(lua_State *L) {
+	int MusicState::setLayer(lua_State *L) {
 		// const char* node = luaL_checkstring(L, 1);
 		// bool active = lua_toboolean(L, 2);
 		// printf("set_layer: %s [%d %s]\n", node, active, active ? "true" : "false");

@@ -20,13 +20,11 @@ namespace SoundEngine {
 	*/
 	class Sound {
 		public:
-			Sound(const char* filename, ALuint source);
+			Sound(const char* filename);
 			~Sound();
-			void reset_track();
-			void unload_previous_buffer();
-			void load_next_buffer();
+			void resetTrack();
+			ALuint* getNextBuffer();
 		private:
-			ALuint source;
 			void *small_buffer;
 			int frames_to_load;
 			

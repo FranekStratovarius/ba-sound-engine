@@ -11,8 +11,7 @@
 #include "sound.hpp"
 
 namespace SoundEngine {
-	Sound::Sound(const char* filename, ALuint source) {
-		this->source = source;
+	Sound::Sound(const char* filename) {
 		sf_count_t num_frames;
 		SNDFILE *sndfile;
 
@@ -219,19 +218,12 @@ namespace SoundEngine {
 		}
 	}
 
-	void Sound::reset_track() {
+	void Sound::resetTrack() {
 		bufferctr = 0;
 	}
 
-	void Sound::unload_previous_buffer() {
-		// Remove the buffer from the queue (uiBuffer contains the buffer ID for the dequeued buffer)
-		ALuint uiBuffer = 0;
-		alSourceUnqueueBuffers(source, 1, &uiBuffer);
-		printf("unloaded buffer: %i\n", uiBuffer);
-	}
-
-	void Sound::load_next_buffer() {
-		printf("loading %i into buffer %i (source: %i)\n", bufferctr, bufferswap, source);
+	ALuint* Sound::getNextBuffer() {
+		printf("loading %i into buffer %i\n", bufferctr, bufferswap);
 		printf("small_buffer: %u, memory: %lu\n", (frames_to_load / splblockalign * byteblockalign) * bufferctr, song_memory_size);
 		if((size_t)(frames_to_load / splblockalign * byteblockalign) * (bufferctr + 1) > song_memory_size) {
 			bufferctr = 0;
@@ -252,10 +244,8 @@ namespace SoundEngine {
 			(size_t)(frames_to_load / splblockalign * byteblockalign),
 			sfinfo.samplerate
 		);
-		alSourcePause(source);
-		alSourceQueueBuffers(source, 1, &buffers[bufferswap]);
-		checkAlError("source error : %i | can't queue buffer\n");
-		alSourcePlay(source);
+		ALuint* buffer = &buffers[bufferswap];
 		bufferswap = (bufferswap + 1) % number_of_buffers;
+		return buffer;
 	}
 }

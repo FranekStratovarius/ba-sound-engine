@@ -11,7 +11,7 @@
 #include "sound.hpp"
 
 namespace SoundEngine {
-	Sound::Sound(const char* filename) {
+	Sound::Sound(const char* filename, float period) {
 		sf_count_t num_frames;
 		SNDFILE *sndfile;
 
@@ -162,13 +162,13 @@ namespace SoundEngine {
 		/* Decode the whole audio file to a buffer. */
 		membuf = malloc((size_t)(sfinfo.frames / splblockalign * byteblockalign));
 		song_memory_size = (size_t)(sfinfo.frames / splblockalign * byteblockalign);
-		printf(
-			"[init] %zu\n%lli\n%i\n%i\n",
-			(size_t)(sfinfo.frames / splblockalign * byteblockalign),
-			sfinfo.frames,
-			splblockalign,
-			byteblockalign
-		);
+		// printf(
+		// 	"[init] %zu\n%lli\n%i\n%i\n",
+		// 	(size_t)(sfinfo.frames / splblockalign * byteblockalign),
+		// 	sfinfo.frames,
+		// 	splblockalign,
+		// 	byteblockalign
+		// );
 
 		if(sample_format == Int16)
 			num_frames = sf_readf_short(sndfile, reinterpret_cast<short int*>(membuf), sfinfo.frames);
@@ -188,15 +188,13 @@ namespace SoundEngine {
 		}
 		num_bytes = (ALsizei)(num_frames / splblockalign * byteblockalign);
 
-		printf("Loading: %s (%s, %dhz)\n", filename, FormatName(format), sfinfo.samplerate);
-		fflush(stdout);
+		// printf("Loading: %s (%s, %dhz)\n", filename, FormatName(format), sfinfo.samplerate);
+		// fflush(stdout);
 
 		alGenBuffers(number_of_buffers, buffers);
 		sf_close(sndfile);
 
-		double bpm = 120.0;
-		double seconds_to_load = (1.0 / bpm) * 60.0 * 4.0;
-		frames_to_load = seconds_to_load * sfinfo.samplerate;
+		frames_to_load = period * sfinfo.samplerate;
 		small_buffer = malloc(
 			(size_t)(frames_to_load / splblockalign * byteblockalign)
 		);
@@ -218,22 +216,14 @@ namespace SoundEngine {
 		}
 	}
 
-	void Sound::resetTrack() {
-		bufferctr = 0;
-	}
-
-	ALuint* Sound::getNextBuffer() {
-		printf("loading %i into buffer %i\n", bufferctr, bufferswap);
-		printf("small_buffer: %u, memory: %lu\n", (frames_to_load / splblockalign * byteblockalign) * bufferctr, song_memory_size);
-		if((size_t)(frames_to_load / splblockalign * byteblockalign) * (bufferctr + 1) > song_memory_size) {
-			bufferctr = 0;
-		}
+	ALuint* Sound::getNextBuffer(int bufferctr) {
+		// printf("loading %i into buffer %i\n", bufferctr, bufferswap);
+		// printf("small_buffer: %u, memory: %lu\n", (frames_to_load / splblockalign * byteblockalign) * bufferctr, song_memory_size);
 		memcpy(
 			small_buffer,
 			((char*)membuf) + (size_t)(frames_to_load / splblockalign * byteblockalign) * bufferctr,
 			(size_t)(frames_to_load / splblockalign * byteblockalign)
 		);
-		bufferctr++;
 
 		if(splblockalign > 1)
 			alBufferi(buffers[bufferswap], AL_UNPACK_BLOCK_ALIGNMENT_SOFT, splblockalign);
@@ -247,5 +237,9 @@ namespace SoundEngine {
 		ALuint* buffer = &buffers[bufferswap];
 		bufferswap = (bufferswap + 1) % number_of_buffers;
 		return buffer;
+	}
+
+	int Sound::getMaxBufferCtr() {
+		return song_memory_size / (frames_to_load / splblockalign * byteblockalign);
 	}
 }

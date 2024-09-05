@@ -19,12 +19,13 @@ namespace SoundEngine {
 			);
 			// void setBuffer(Sound *sound);
 			void queueBuffer(ALuint* buffer);
-			void unqueueBuffers(int n);
+			void unqueueBuffer();
 			int getBuffersProcessed();
 			void play();
 			void pause();
 			void rewind();
-			void setLooping(bool looping);
+			void silence(bool silence);
+			// ignore the spatial position of the source
 			void setMono(bool mono);
 		private:
 			ALuint source;

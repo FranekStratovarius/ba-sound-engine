@@ -20,10 +20,10 @@ namespace SoundEngine {
 	*/
 	class Sound {
 		public:
-			Sound(const char* filename);
+			Sound(const char* filename, float period);
 			~Sound();
-			void resetTrack();
-			ALuint* getNextBuffer();
+			ALuint* getNextBuffer(int bufferctr);
+			int getMaxBufferCtr();
 		private:
 			void *small_buffer;
 			int frames_to_load;
@@ -38,7 +38,6 @@ namespace SoundEngine {
 			unsigned int number_of_buffers = 2;
 			ALuint buffers[2];
 
-			unsigned int bufferctr = 0;
 			unsigned int bufferswap = 0;
 
 			unsigned long song_memory_size;

@@ -1,18 +1,17 @@
 local node = {
 	name = "peaceful",
-	track = "assets/tracks/02-1-start_loop.ogg",
-	-- layers = {
-	-- 	base = "assets/base.ogg",
-	-- 	choir = "assets/choir.ogg",
-	-- 	strings = "assets/strings.ogg",
-	-- 	piano = "assets/piano.ogg",
-	-- },
-	bpm = 112,
+	-- track = "assets/tracks/02-1-start_loop.ogg",
+	layers = {
+		choir = "assets/tracks/01-1-start_loop.ogg",
+		violins = "assets/tracks/02-1-start_loop.ogg",
+		dream_piano = "assets/tracks/03-1-start_loop.ogg",
+		glockenspiel = "assets/tracks/04-1-start_loop.ogg",
+	},
+	bpm = 120,
 }
 
 -- the update function is called periodically, normally on the beat of the music
 function node.update()
-	print("update peaceful")
 	-- values set from c++ code will be saved in the world table
 	if world.enemy_count > 0 then
 		-- the next_node function changes the state of the music box
@@ -23,9 +22,10 @@ function node.update()
 	end
 
 	-- activate layers depending on the current state of the game
-	set_layer("choir",   world.wonders > 4)
-	set_layer("strings", world.wonders > 2)
-	set_layer("piano",   world.wonders > 0)
+	set_layer("glockenspiel", true)
+	set_layer("dream_piano",  world.wonders > 0)
+	set_layer("violins",      world.wonders > 1)
+	set_layer("choir",        world.wonders > 2)
 end
 
 return node

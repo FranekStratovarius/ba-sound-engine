@@ -84,10 +84,11 @@ int main(int argc, char **argv) {
 		);
 		// update variables with input
 		if (IsKeyPressed(KEY_J)) {
-			selected = (selected - 1) % variables.size();
+			selected = (selected + 1) % variables.size();
 		}
 		if (IsKeyPressed(KEY_U)) {
-			selected = (selected + 1) % variables.size();
+			int size = variables.size();
+			selected = ((selected - 1) + size) % size;
 		}
 		if (IsKeyPressed(KEY_H)) {
 			variables[selected].value = variables[selected].value - 1;
@@ -96,6 +97,10 @@ int main(int argc, char **argv) {
 		if (IsKeyPressed(KEY_K)) {
 			variables[selected].value = variables[selected].value + 1;
 			musicBox.setWorldVariable(variables[selected]);
+		}
+
+		if (IsKeyPressed(KEY_R)) {
+			printf("stop to debug");
 		}
 
 		BeginDrawing();
@@ -107,7 +112,7 @@ int main(int argc, char **argv) {
 				DrawCube((Vector3){10.0, 1.0, 0.0}, 0.5f, 0.5f, 0.5f, PURPLE);
 			EndMode3D();
 
-			DrawText("WASD to move,\nMouse for turning.", 50, 50, 20, BLACK);
+			DrawText("WASD to move,\nMouse for turning,\nUHJK for music control.", 50, 50, 20, BLACK);
 			DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 60, 10, BLACK);
 			DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", lookAt.x, lookAt.y, lookAt.z), 610, 75, 10, BLACK);
 			DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 90, 10, BLACK);

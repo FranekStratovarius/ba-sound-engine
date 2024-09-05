@@ -29,13 +29,17 @@ namespace SoundEngine {
 	}
 	
 	void Source::queueBuffer(ALuint* buffer) {
+		alGetError();
 		alSourceQueueBuffers(source, 1, buffer);
+		checkAlError("SOURCE error: %s | Failed to queue buffer\n");
 	}
 
-	void Source::unqueueBuffers(int n) {
+	void Source::unqueueBuffer() {
+		alGetError();
 		ALuint uiBuffer = 0;
 		alSourceUnqueueBuffers(source, 1, &uiBuffer);
-		printf("unloaded buffer: %i\n", uiBuffer);
+		// printf("unloaded buffer: %i\n", uiBuffer);
+		checkAlError("SOURCE error: %s | Failed to unload buffer\n");
 	}
 
 	int Source::getBuffersProcessed() {
@@ -62,10 +66,12 @@ namespace SoundEngine {
 		checkAlError("SOURCE error: %s | Failed to rewind sound source\n");
 	}
 
-	void Source::setLooping(bool looping) {
-		alGetError();
-		alSourcei(source, AL_LOOPING, looping);
-		checkAlError("SOURCE error: %s | Failed to set sound source looping\n");
+	void Source::silence(bool silence) {
+		alSourcef(
+			source,
+			AL_GAIN,
+			silence ? 0 : 1
+		);
 	}
 
 	void Source::setMono(bool mono) {

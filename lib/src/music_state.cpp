@@ -20,45 +20,61 @@ namespace SoundEngine {
 		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
 
 		// get single track
-		lua_getfield(L, -1, "track");
-		const char* filename = lua_tostring(L, -1);
-		lua_pop(L, 1);
-
-		// get list of layers
-		lua_getfield(L, -1, "layers");
-		printf("isnil: %i\n", lua_isnil(L, -1));
-		if(lua_isnil(L, -1) != 1) {
-			lua_pushnil(L);
-			while(lua_next(L, -2) != 0){
-				printf("loading next layer\n");
-				const char* key = lua_tostring(L, -2);
-				printf("key: %s\n", key);
-				const char* filename = lua_tostring(L, -1);
-				printf("filename: %s\n", filename);
-				// and load them
-				Sound sound = Sound(filename);
-				// put them into a hashmap
-				sounds.insert({key, sound});
-				lua_pop(L, 1);
-			}
-		}
-		lua_pop(L, 1);
+		// lua_getfield(L, -1, "track");
+		// const char* filename = lua_tostring(L, -1);
+		// lua_pop(L, 1);
 
 		lua_getfield(L, -1, "bpm");
 		period = 60.0/lua_tonumber(L, -1);
 		lua_pop(L, 1);
-		lua_pop(L, 1);
-		printf("loading track: %s with %f\n", filename, period);
 
-		sound = new Sound(filename);
+		// get list of layers
+		lua_getfield(L, -1, "layers");
+		// printf("isnil: %i\n", lua_isnil(L, -1));
+		int number_of_layers = 0;
+		if(lua_isnil(L, -1) != 1) {
+			lua_pushnil(L);
+			while(lua_next(L, -2) != 0){
+				// printf("loading next layer\n");
+				const char* key = lua_tostring(L, -2);
+				// printf("key: %s\n", key);
+				const char* filename = lua_tostring(L, -1);
+				// printf("filename: %s\n", filename);
+				// and load them
+				Sound* sound = new Sound(filename, period);
+				// put them into a hashmap
+				sounds.push_back({
+					true,
+					sound
+				});
+				// printf("loaded %s silenced %i\n", key, number_of_layers == 0 ? false : true);
+				sound_ids[key] = number_of_layers;
+				number_of_layers++;
+				lua_pop(L, 1);
+			}
+		}
+		lua_pop(L, 1);
+		lua_pop(L, 1);
+
+		bufferctr = 0;
+		maxBufferctr = sounds[0].sound->getMaxBufferCtr();
+		printf("maxBufferctr = %i\n", maxBufferctr);
 	}
 
 	MusicState::~MusicState() {
-		delete sound;
 	}
 
-	ALuint* MusicState::getNextBuffer() {
-		return sound->getNextBuffer();
+	std::vector<ALuint*> MusicState::getNextBuffers() {
+		std::vector<ALuint*> buffers;
+		for(ToggleableSound toggleable_sound: sounds) {
+			if(!toggleable_sound.silenced) {
+				buffers.push_back(
+					toggleable_sound.sound->getNextBuffer(bufferctr)
+				);
+			}
+		}
+		bufferctr = (bufferctr + 1) % maxBufferctr;
+		return buffers;
 	}
 
 	MusicState* MusicState::update() {
@@ -71,7 +87,10 @@ namespace SoundEngine {
 		// clear nextState and current_time for reuse so this state is
 		// later restarted fresh
 		if (nextState != nullptr) {
-			sound->resetTrack();
+			// for(ToggleableSound toggleable_sound: sounds) {
+			// 	toggleable_sound.sound->resetTrack();
+			// }
+			bufferctr = 0;
 			MusicState *switcheroo = nextState;
 			nextState = nullptr;
 			current_time = 0;
@@ -108,7 +127,7 @@ namespace SoundEngine {
 		}
 
 		nextState = static_cast<MusicState*>(lua_touserdata(L, 1));
-		printf("skip to next node: %p\n", nextState);
+		// printf("skip to next node: %p\n", nextState);
 		return 0;
 	}
 
@@ -116,9 +135,10 @@ namespace SoundEngine {
 		activate/deactivate stem layer from lua
 	*/
 	int MusicState::setLayer(lua_State *L) {
-		// const char* node = luaL_checkstring(L, 1);
-		// bool active = lua_toboolean(L, 2);
+		const char* node = luaL_checkstring(L, 1);
+		bool active = lua_toboolean(L, 2);
 		// printf("set_layer: %s [%d %s]\n", node, active, active ? "true" : "false");
+		sounds[sound_ids[node]].silenced = !active;
 		return 0;
 	}
 }

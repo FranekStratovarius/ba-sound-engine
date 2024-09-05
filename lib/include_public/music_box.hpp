@@ -26,10 +26,14 @@ namespace SoundEngine {
 			void setWorldVariable(WorldVariable variable);
 			std::vector<WorldVariable> getWorldVariables();
 		private:
+			void unqueueBuffers();
+			void queueBuffers(std::vector<ALuint*> buffers);
+			void playSources();
 			MusicState **states;
 			// don't delete, this is a pointer to one elemet of this->states!
 			MusicState *currentState;
-			Source *source;
+			std::vector<Source*> sources;
+			std::vector<bool> silenced_sources;
 			lua_State *L;
 	};
 }

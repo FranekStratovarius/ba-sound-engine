@@ -8,7 +8,6 @@ add_rules("mode.debug", "mode.release")
 target("soundengine-usage-example") do
 	set_license("LGPL-2.0")
 	set_kind("binary")
-	set_warnings("all", "error")
 	set_languages("cxx20")
 
 	add_files("example/src/*.cpp")
@@ -31,7 +30,6 @@ end
 target("soundengine") do
 	set_license("LGPL-2.0")
 	set_kind("shared")
-	set_warnings("all", "error")
 	set_languages("cxx20")
 
 	add_files("lib/src/**.cpp")

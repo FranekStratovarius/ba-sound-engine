@@ -1,6 +1,7 @@
 #ifndef SOUNDENGINE_HPP
 #define SOUNDENGINE_HPP
 #include <unordered_map>
+#include "export.hpp"
 #include "AL/alc.h"
 
 namespace SoundEngine {
@@ -11,7 +12,7 @@ namespace SoundEngine {
 	*
 	* 
 	*/
-	class Engine {
+	class __export Engine {
 		public:
 			/// Erstellt eine Instanz der SoundEngine.
 			Engine();

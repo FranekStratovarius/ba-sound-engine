@@ -1,8 +1,9 @@
 #ifndef SOUNDENGINE_LISTENER_HPP
 #define SOUNDENGINE_LISTENER_HPP
+#include "export.hpp"
 
 namespace SoundEngine {
-	class Listener {
+	class __export Listener {
 		public:
 			Listener();
 			void update(

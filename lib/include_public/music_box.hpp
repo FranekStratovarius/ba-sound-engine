@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <lua.hpp>
+#include "export.hpp"
 
 #include "music_state.hpp"
 #include "source.hpp"
@@ -13,7 +14,7 @@ typedef struct {
 } WorldVariable;
 
 namespace SoundEngine {
-	class MusicBox {
+	class __export MusicBox {
 		public:
 			MusicBox();
 			~MusicBox();

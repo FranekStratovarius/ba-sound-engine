@@ -8,7 +8,7 @@ namespace SoundEngine {
 		/* Create the source to play the sound with. */
 		source = 0;
 		alGenSources(1, &source);
-		checkAlError("SOURCE error: %s | Failed to setup sound source\n");
+		checkAlError("SOURCE error: Failed to setup sound source\n");
 	}
 
 	Source::~Source() {
@@ -25,13 +25,13 @@ namespace SoundEngine {
 		alGetError();
 		ALfloat sourcePos[] = {position_x, position_y, position_z};
 		alSourcefv(source, AL_POSITION, sourcePos);
-		checkAlError("SOURCE error: %s | Failed to set sound source position\n");
+		checkAlError("SOURCE error: Failed to set sound source position\n");
 	}
 	
 	void Source::queueBuffer(ALuint* buffer) {
 		alGetError();
 		alSourceQueueBuffers(source, 1, buffer);
-		checkAlError("SOURCE error: %s | Failed to queue buffer\n");
+		checkAlError("SOURCE error: Failed to queue buffer\n");
 	}
 
 	void Source::unqueueBuffer() {
@@ -39,7 +39,7 @@ namespace SoundEngine {
 		ALuint uiBuffer = 0;
 		alSourceUnqueueBuffers(source, 1, &uiBuffer);
 		// printf("unloaded buffer: %i\n", uiBuffer);
-		checkAlError("SOURCE error: %s | Failed to unload buffer\n");
+		checkAlError("SOURCE error: Failed to unload buffer\n");
 	}
 
 	int Source::getBuffersProcessed() {
@@ -51,19 +51,19 @@ namespace SoundEngine {
 	void Source::play() {
 		alGetError();
 		alSourcePlay(source);
-		checkAlError("SOURCE error: %s | Failed to play sound source\n");
+		checkAlError("SOURCE error: Failed to play sound source\n");
 	}
 
 	void Source::pause() {
 		alGetError();
 		alSourcePause(source);
-		checkAlError("SOURCE error: %s | Failed to pause sound source\n");
+		checkAlError("SOURCE error: Failed to pause sound source\n");
 	}
 
 	void Source::rewind() {
 		alGetError();
 		alSourceRewind(source);
-		checkAlError("SOURCE error: %s | Failed to rewind sound source\n");
+		checkAlError("SOURCE error: Failed to rewind sound source\n");
 	}
 
 	void Source::silence(bool silence) {
@@ -78,6 +78,6 @@ namespace SoundEngine {
 		alGetError();
 		int al_mono_bool = mono ? AL_TRUE : AL_FALSE;
 		alSourcei(source, AL_SOURCE_RELATIVE, al_mono_bool);
-		checkAlError("SOURCE error: %s | Failed to set sound source mono\n");
+		checkAlError("SOURCE error: Failed to set sound source mono\n");
 	}
 }

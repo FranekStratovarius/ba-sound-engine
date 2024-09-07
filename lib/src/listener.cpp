@@ -27,7 +27,7 @@ namespace SoundEngine {
 	) {
 		ALfloat listenerPos[] = {position_x, position_y, position_z};
 		alListenerfv(AL_POSITION,listenerPos);
-		// checkAlError("alListenerfv POSITION : %i | can't set position\n");
+		// checkAlError("alListenerfv POSITION : can't set position\n");
 	}
 
 
@@ -38,7 +38,7 @@ namespace SoundEngine {
 	) {
 		ALfloat listenerVel[] = {velocity_x, velocity_y, velocity_z};
 		alListenerfv(AL_VELOCITY, listenerVel);
-		// checkAlError("alListenerfv ORIENTATION : %i | can't set velocity\n");
+		// checkAlError("alListenerfv ORIENTATION : can't set velocity\n");
 	}
 
 	void Listener::setOrientation(
@@ -50,6 +50,6 @@ namespace SoundEngine {
 			up_x, up_y, up_z
 		};
 		alListenerfv(AL_ORIENTATION,listenerOri);
-		// checkAlError("alListenerfv ORIENTATION : %i | can't set orientation\n");
+		// checkAlError("alListenerfv ORIENTATION : can't set orientation\n");
 	}
 }

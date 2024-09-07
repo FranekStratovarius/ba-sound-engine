@@ -11,15 +11,15 @@ void checkAlError(const char* format) {
 		char error_string[30] = "";
 		switch (error) {
 			case AL_INVALID_NAME:
-				strcpy(error_string, "AL_INVALID_OPERATION");
+				strcpy_s(error_string, 30, "AL_INVALID_OPERATION");
 			case AL_INVALID_ENUM:
-				strcpy(error_string, "AL_INVALID_ENUM");
+				strcpy_s(error_string, 30, "AL_INVALID_ENUM");
 			case AL_INVALID_VALUE:
-				strcpy(error_string, "AL_INVALID_VALUE");
+				strcpy_s(error_string, 30, "AL_INVALID_VALUE");
 			case AL_INVALID_OPERATION:
-				strcpy(error_string, "AL_INVALID_OPERATION");
+				strcpy_s(error_string, 30, "AL_INVALID_OPERATION");
 			case AL_OUT_OF_MEMORY:
-				strcpy(error_string, "AL_OUT_OF_MEMORY");
+				strcpy_s(error_string, 30, "AL_OUT_OF_MEMORY");
 			default:
 				snprintf(error_string, 30, "%i", error);
 		}

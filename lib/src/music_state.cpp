@@ -25,7 +25,7 @@ namespace SoundEngine {
 		// lua_pop(L, 1);
 
 		lua_getfield(L, -1, "bpm");
-		period = 60.0/lua_tonumber(L, -1);
+		period = 60.0f/(float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
 		// get list of layers
@@ -101,7 +101,7 @@ namespace SoundEngine {
 	}
 
 	int MusicState::getNumberOfLayers() {
-		return sounds.size();
+		return (int)sounds.size();
 	}
 
 	/*

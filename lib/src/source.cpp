@@ -70,7 +70,7 @@ namespace SoundEngine {
 		alSourcef(
 			source,
 			AL_GAIN,
-			silence ? 0 : 1
+			silence ? 0.0f : 1.0f
 		);
 	}
 

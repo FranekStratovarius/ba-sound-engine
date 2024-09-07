@@ -161,7 +161,7 @@ namespace SoundEngine {
 
 		/* Decode the whole audio file to a buffer. */
 		membuf = malloc((size_t)(sfinfo.frames / splblockalign * byteblockalign));
-		song_memory_size = (size_t)(sfinfo.frames / splblockalign * byteblockalign);
+		song_memory_size = (unsigned long)(sfinfo.frames / splblockalign * byteblockalign);
 		// printf(
 		// 	"[init] %zu\n%lli\n%i\n%i\n",
 		// 	(size_t)(sfinfo.frames / splblockalign * byteblockalign),
@@ -194,7 +194,7 @@ namespace SoundEngine {
 		alGenBuffers(number_of_buffers, buffers);
 		sf_close(sndfile);
 
-		frames_to_load = period * sfinfo.samplerate;
+		frames_to_load = (int)(period * sfinfo.samplerate);
 		small_buffer = malloc(
 			(size_t)(frames_to_load / splblockalign * byteblockalign)
 		);

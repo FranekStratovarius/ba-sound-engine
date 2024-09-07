@@ -10,7 +10,6 @@
 #include <listener.hpp>
 #include <source.hpp>
 #include <string>
-#include <unistd.h>
 
 int main(int argc, char **argv) {
 	SoundEngine::Engine se = SoundEngine::Engine();
@@ -58,9 +57,9 @@ int main(int argc, char **argv) {
 
 	// Define the camera to look into our 3d world (position, target, up vector)
 	Camera camera = { .position = {.x = 0} };
-	camera.position = (Vector3){ 0.0f, 2.0f, 0.0f };	// Camera position
-	camera.target = (Vector3){ 1.0f, 0.0f, 0.0f };		// Camera looking at point
-	camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };			// Camera up vector (rotation towards target)
+	camera.position = { 0.0f, 2.0f, 0.0f };	// Camera position
+	camera.target = { 1.0f, 0.0f, 0.0f };		// Camera looking at point
+	camera.up = { 0.0f, 1.0f, 0.0f };			// Camera up vector (rotation towards target)
 	camera.fovy = 60.0f;										// Camera field-of-view Y
 	camera.projection = CAMERA_PERSPECTIVE;						// Camera projection type
 
@@ -87,7 +86,7 @@ int main(int argc, char **argv) {
 			selected = (selected + 1) % variables.size();
 		}
 		if (IsKeyPressed(KEY_U)) {
-			int size = variables.size();
+			int size = (int)variables.size();
 			selected = ((selected - 1) + size) % size;
 		}
 		if (IsKeyPressed(KEY_H)) {
@@ -107,9 +106,9 @@ int main(int argc, char **argv) {
 			ClearBackground(RAYWHITE);
 			BeginMode3D(camera);
 				// Draw ground
-				DrawPlane((Vector3){ 0.0f, 0.0f, 0.0f }, (Vector2){ 32.0f, 32.0f }, LIGHTGRAY);
-				DrawCube((Vector3){0.0, 1.0, 0.0}, 0.5f, 0.5f, 0.5f, PURPLE);
-				DrawCube((Vector3){10.0, 1.0, 0.0}, 0.5f, 0.5f, 0.5f, PURPLE);
+				DrawPlane({ 0.0f, 0.0f, 0.0f }, { 32.0f, 32.0f }, LIGHTGRAY);
+				DrawCube({0.0, 1.0, 0.0}, 0.5f, 0.5f, 0.5f, PURPLE);
+				DrawCube({10.0, 1.0, 0.0}, 0.5f, 0.5f, 0.5f, PURPLE);
 			EndMode3D();
 
 			DrawText("WASD to move,\nMouse for turning,\nUHJK for music control.", 50, 50, 20, BLACK);

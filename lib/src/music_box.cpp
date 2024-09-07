@@ -62,7 +62,7 @@ namespace SoundEngine {
 		lua_getglobal(L, "music_states");
 		
 		// initialize array of music states
-		unsigned long length = lua_rawlen(L, -1);
+		unsigned long length = (unsigned long)lua_rawlen(L, -1);
 		states = new MusicState*[length];
 
 		// start traversing the table of music_states
@@ -200,8 +200,8 @@ namespace SoundEngine {
 	}
 
 	void MusicBox::queueBuffers(std::vector<ALuint*> buffers) {
-		int number_of_buffers = buffers.size();
-		int number_of_sources = sources.size();
+		size_t number_of_buffers = buffers.size();
+		size_t number_of_sources = sources.size();
 		// sources[0]->queueBuffer(buffers[0]);
 		for(int i = 0; i < number_of_sources; i++) {
 			// printf("queued buffer %i [%i]\n", i, i < number_of_buffers);
@@ -219,11 +219,12 @@ namespace SoundEngine {
 	}
 
 	void MusicBox::playSources() {
-		int number_of_sources = sources.size();
-		ALuint sources_ids[number_of_sources];
+		size_t number_of_sources = sources.size();
+		ALuint *sources_ids = new ALuint[number_of_sources];
 		for(int i = 0; i < number_of_sources; i++) {
 			sources_ids[i] = sources[i]->getSource();
 		}
-		alSourcePlayv(number_of_sources, sources_ids);
+		alSourcePlayv((ALsizei)number_of_sources, sources_ids);
+		delete[] sources_ids;
 	}
 }

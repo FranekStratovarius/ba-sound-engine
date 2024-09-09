@@ -1,11 +1,11 @@
 local node = {
 	name = "peaceful_to_combat",
 	layers = {
-		glockenspiel = "assets/tracks/04-3-transition_to_battle.ogg",
+		glockenspiel      = "assets/tracks/04-3-transition_to_battle.ogg",
 		electric_lp_heavy = "assets/tracks/14-3-transition_to_battle.ogg",
 		electric_sc_heavy = "assets/tracks/15-3-transition_to_battle.ogg",
-		violins = "assets/tracks/17-3-transition_to_battle.ogg",
-		violinchellos = "assets/tracks/18-3-transition_to_battle.ogg",
+		violins           = "assets/tracks/17-3-transition_to_battle.ogg",
+		violinchellos     = "assets/tracks/18-3-transition_to_battle.ogg",
 	},
 	bpm = 120,
 }
@@ -28,7 +28,7 @@ function node.update()
 	beats = beats + 1
 	print("beat: " .. beats)
 	if beats >= 8 then
-		next_node(states["combat"])
+		next_node(states["combat_start"])
 		return
 	end
 

@@ -1,10 +1,10 @@
 local node = {
-	name = "peaceful",
+	name = "peaceful_start",
 	layers = {
-		choir        = "assets/tracks/01-2-loop.ogg",
-		violins      = "assets/tracks/02-2-loop.ogg",
-		dream_piano  = "assets/tracks/03-2-loop.ogg",
-		glockenspiel = "assets/tracks/04-2-loop.ogg",
+		choir        = "assets/tracks/01-1-start_loop.ogg",
+		violins      = "assets/tracks/02-1-start_loop.ogg",
+		dream_piano  = "assets/tracks/03-1-start_loop.ogg",
+		glockenspiel = "assets/tracks/04-1-start_loop.ogg",
 	},
 	bpm = 120,
 }
@@ -17,9 +17,6 @@ end
 
 -- this function will be called once when the state is started
 function node.init()
-	for k,v in pairs(states) do
-		print("state: "..k.." "..v)
-	end
 	-- the music box needs always at least one layer active
 	set_layer("glockenspiel", true)
 	set_dynamic_layers()

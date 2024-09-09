@@ -134,6 +134,9 @@ namespace SoundEngine {
 
 	MusicBox::~MusicBox() {
 		delete[] states;
+		for(Source* source: sources) {
+			delete source;
+		}
 		// close lua state
 		lua_close(L);
 	}

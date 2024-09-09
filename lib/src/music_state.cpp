@@ -62,6 +62,9 @@ namespace SoundEngine {
 	}
 
 	MusicState::~MusicState() {
+		for(ToggleableSound toggleable_sound: sounds) {
+			delete toggleable_sound.sound;
+		}
 	}
 
 	std::vector<ALuint*> MusicState::getNextBuffers() {

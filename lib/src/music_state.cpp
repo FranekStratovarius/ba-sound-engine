@@ -58,7 +58,6 @@ namespace SoundEngine {
 
 		bufferctr = 0;
 		maxBufferctr = sounds[0].sound->getMaxBufferCtr();
-		printf("maxBufferctr = %i\n", maxBufferctr);
 	}
 
 	MusicState::~MusicState() {
@@ -84,7 +83,6 @@ namespace SoundEngine {
 		// run init function from lua state
 		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
 		lua_getfield(L, -1, "init");
-		printf("is nil? %i\n", lua_isnil(L, -1));
 		if(lua_isnil(L, -1) == 0) {
 			lua_call(L, 0, 0);
 		}
@@ -95,7 +93,9 @@ namespace SoundEngine {
 		// run update function from lua state
 		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
 		lua_getfield(L, -1, "update");
-		lua_call(L, 0, 0);
+		if(lua_isnil(L, -1) == 0) {
+			lua_call(L, 0, 0);
+		}
 		lua_pop(L, 1);
 		
 		// clear nextState and current_time for reuse so this state is

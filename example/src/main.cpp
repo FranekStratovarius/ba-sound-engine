@@ -21,21 +21,12 @@ int main(int argc, char **argv) {
 		0.0, 1.0, 0.0
 	);
 
-	// SoundEngine::Sound sound01 = SoundEngine::Sound("assets/01 Lich is Unbreakable (Expedition 1).ogg");
-	// SoundEngine::Sound sound02 = SoundEngine::Sound("assets/30 Golden Win (piano).ogg");
-
-	// SoundEngine::Source source01 = SoundEngine::Source();
-	// source01.setPosition(10.0, 1.0, 0.0);
-	// source01.setBuffer(&sound01);
-	// source01.play();
-
-	// SoundEngine::Source source02 = SoundEngine::Source();
-	// source02.set_buffer(sound02);
-	// source02.set_position(0.0, 1.0, 0.0);
-	// source02.play();
-
-	SoundEngine::MusicBox musicBox = SoundEngine::MusicBox();
+	SoundEngine::MusicBox musicBox;
 	musicBox.setPosition(0.0, 1.0, 0.0);
+
+
+	SoundEngine::MusicBox musicBox2;
+	musicBox2.setPosition(10.0, 1.0, 0.0);
 
 	std::vector<WorldVariable> variables = musicBox.getWorldVariables();
 	for (WorldVariable variable : variables) {
@@ -43,11 +34,6 @@ int main(int argc, char **argv) {
 	}
 	unsigned int selected = 0;
 
-	// while(1) {
-	// 	usleep(100 * 1000);
-	// 	musicBox.update(GetFrameTime());
-	// }
-	//*
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 	// const int screenWidth = GetScreenWidth();
@@ -72,6 +58,7 @@ int main(int argc, char **argv) {
 
 	while (!WindowShouldClose()) {
 		musicBox.update();
+		musicBox2.update();
 		Vector3 oldCameraPos = camera.position;
 		UpdateCamera(&camera, cameraMode);
 		Vector3 cameraVelocity = Vector3Subtract(camera.position, oldCameraPos);

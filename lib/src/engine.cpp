@@ -11,7 +11,7 @@ namespace SoundEngine {
 		if(InitAL(0,0) != 0) {
 			throw std::runtime_error("can't initialize openAL");
 		}
-		alDopplerFactor(70.0f);
+		alDopplerFactor(30.0f);
 	}
 
 	Engine::~Engine() {

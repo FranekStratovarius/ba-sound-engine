@@ -77,6 +77,17 @@ namespace SoundEngine {
 		return buffers;
 	}
 
+	void MusicState::init() {
+		// run init function from lua state
+		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
+		lua_getfield(L, -1, "init");
+		printf("is nil? %i\n", lua_isnil(L, -1));
+		if(lua_isnil(L, -1) == 0) {
+			lua_call(L, 0, 0);
+		}
+		lua_pop(L, 1);
+	}
+
 	MusicState* MusicState::update() {
 		// run update function from lua state
 		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
@@ -98,6 +109,16 @@ namespace SoundEngine {
 		} else {
 			return this;
 		}
+	}
+
+	void MusicState::exit() {
+		// run exit function from lua state
+		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
+		lua_getfield(L, -1, "exit");
+		if(!lua_isnil(L, -1)) {
+			lua_call(L, 0, 0);
+		}
+		lua_pop(L, 1);
 	}
 
 	int MusicState::getNumberOfLayers() {

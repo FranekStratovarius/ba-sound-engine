@@ -124,7 +124,7 @@ namespace SoundEngine {
 		}
 
 		// only load buffers of the first state
-		currentState->update();
+		currentState->init();
 		std::vector<ALuint*> buffers = currentState->getNextBuffers();
 		queueBuffers(buffers);
 		buffers = currentState->getNextBuffers();
@@ -145,13 +145,14 @@ namespace SoundEngine {
 			if(currentState != newCurrentState) {
 				// save pointer to class instance https://stackoverflow.com/a/32416597
 				*static_cast<MusicState**>(lua_getextraspace(L)) = newCurrentState;
+				currentState->exit();
 				currentState = newCurrentState;
+				currentState->init();
 			}
 
 			// source->unqueueBuffer();
 			// ALuint* buffer = currentState->getNextBuffer();
 			// source->queueBuffer(buffer);
-			currentState->update();
 			unqueueBuffers();
 			std::vector<ALuint*> buffers = currentState->getNextBuffers();
 			queueBuffers(buffers);

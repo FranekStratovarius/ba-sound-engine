@@ -21,7 +21,9 @@ namespace SoundEngine {
 			void start();
 			// ALuint* getNextBuffer();
 			std::vector<ALuint*> getNextBuffers();
+			void init();
 			MusicState* update();
+			void exit();
 			int getNumberOfLayers();
 
 			int nextNode(lua_State *L);

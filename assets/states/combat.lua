@@ -20,25 +20,7 @@ local node = {
 	bpm = 120,
 }
 
--- the update function is called periodically, normally on the beat of the music
-function node.update()
-	-- values set from c++ code will be saved in the world table
-	if world.enemy_count <= 0 then
-		-- the next_node function changes the state of the music box
-		-- next_node("peaceful_to_combat")
-		next_node(states["peaceful"])
-		-- early return, we don't have to check other variables
-		return
-	end
-
-	-- activate layers depending on the current state of the game
-	set_layer("cowbell",           true)
-	set_layer("sleigh_bells",      true)
-	set_layer("taikos",            true)
-	set_layer("snare_drum",        true)
-	set_layer("field_drum",        true)
-	set_layer("bongos",            true)
-	set_layer("bass_drum",         true)
+local function set_dynamic_layers()
 	set_layer("french_horn_1",     world.enemy_count > 1 and world.boss == 1)
 	set_layer("harp",              world.enemy_count > 1 and world.boss ~= 1)
 	set_layer("electric_lp_heavy", world.enemy_count > 2 and world.boss == 1)
@@ -46,6 +28,32 @@ function node.update()
 	set_layer("violins",           world.enemy_count > 2 and world.boss ~= 1)
 	set_layer("violinchellos",     world.enemy_count > 2 and world.boss ~= 1)
 	set_layer("french_horn_2",     world.enemy_count > 3)
+end
+
+function node.init()
+	set_layer("cowbell",           true)
+	set_layer("sleigh_bells",      true)
+	set_layer("taikos",            true)
+	set_layer("snare_drum",        true)
+	set_layer("field_drum",        true)
+	set_layer("bongos",            true)
+	set_layer("bass_drum",         true)
+	set_dynamic_layers()
+end
+
+-- the update function is called periodically, normally on the beat of the music
+function node.update()
+	-- values set from c++ code will be saved in the world table
+	if world.enemy_count <= 0 then
+		-- the next_node function changes the state of the music box
+		-- next_node("peaceful_to_combat")
+		next_node(states["combat_to_peaceful"])
+		-- early return, we don't have to check other variables
+		return
+	end
+
+	-- activate layers depending on the current state of the game
+	set_dynamic_layers()
 end
 
 return node

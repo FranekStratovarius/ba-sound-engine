@@ -19,11 +19,6 @@ namespace SoundEngine {
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
 
-		// get single track
-		// lua_getfield(L, -1, "track");
-		// const char* filename = lua_tostring(L, -1);
-		// lua_pop(L, 1);
-
 		lua_getfield(L, -1, "bpm");
 		period = 60.0f/(float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
@@ -101,9 +96,6 @@ namespace SoundEngine {
 		// clear nextState and current_time for reuse so this state is
 		// later restarted fresh
 		if (nextState != nullptr) {
-			// for(ToggleableSound toggleable_sound: sounds) {
-			// 	toggleable_sound.sound->resetTrack();
-			// }
 			bufferctr = 0;
 			MusicState *switcheroo = nextState;
 			nextState = nullptr;

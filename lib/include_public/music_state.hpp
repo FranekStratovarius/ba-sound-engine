@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "sound.hpp"
-#include "source.hpp"
 
 typedef struct {
 	bool silenced;
@@ -19,7 +18,6 @@ namespace SoundEngine {
 			MusicState(lua_State *L, int table_ref);
 			~MusicState();
 			void start();
-			// ALuint* getNextBuffer();
 			std::vector<ALuint*> getNextBuffers();
 			void init();
 			MusicState* update();
@@ -32,9 +30,10 @@ namespace SoundEngine {
 			int number_of_layers;
 			std::vector<ToggleableSound> sounds;
 			std::unordered_map<const char*, int> sound_ids;
-			// Sound *sound;
+			// don't delete
 			MusicState* nextState;
 			int table_ref;
+			// don't delete
 			lua_State *L;
 			float period;
 			float current_time;

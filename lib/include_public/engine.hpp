@@ -7,10 +7,7 @@
 namespace SoundEngine {
 	/**
 	* Hauptbestandteil der SoundEngine. Hier wird
-	der Kontext von OpenAL gehalten
-	* und geladene Sounds werden hier gespeichert.
-	*
-	* 
+	* der Kontext von OpenAL initialisiert und gehalten.
 	*/
 	class __export Engine {
 		public:
@@ -19,14 +16,6 @@ namespace SoundEngine {
 
 			/// Zerstört die Instanz der SoundEngine.
 			~Engine();
-
-			/**
-			* Lädt Sounddatei von angegebenem Pfad
-			* und spielt diese schnellstmöglich ab.
-			*
-			* @param filename Dateipfad der Sounddatei
-			*/
-			void play(const char* filename);
 
 		private:
 			std::unordered_map<const char*, int>

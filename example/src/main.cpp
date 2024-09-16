@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 		0.0, 1.0, 0.0
 	);
 
-	SoundEngine::MusicBox musicBox;
+	SoundEngine::MusicBox musicBox = SoundEngine::MusicBox();
 	musicBox.setPosition(0.0, 1.0, 0.0);
 
 

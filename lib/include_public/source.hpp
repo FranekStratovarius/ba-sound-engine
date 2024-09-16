@@ -17,7 +17,6 @@ namespace SoundEngine {
 				float position_y = 0.0,
 				float position_z = 0.0
 			);
-			// void setBuffer(Sound *sound);
 			void queueBuffer(ALuint* buffer);
 			void unqueueBuffer();
 			int getBuffersProcessed();

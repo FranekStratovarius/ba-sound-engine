@@ -1,7 +1,4 @@
 add_requires("openal-soft", "libsndfile", "raylib", "lua")
-if(is_plat("linux")) then
-	add_requires("libsndio")
-end
 
 add_rules("mode.debug", "mode.release")
 
@@ -16,9 +13,6 @@ target("soundengine-usage-example") do
 	add_deps("soundengine")
 
 	add_packages("openal-soft", "libsndfile", "raylib", "lua")
-	if(is_plat("linux")) then
-		add_packages("libsndio")
-	end
 	add_defines("PLATFORM_DESKTOP")
 
 	-- copy assets after build
@@ -37,7 +31,4 @@ target("soundengine") do
 	add_includedirs("lib/include_public", {public = true})
 
 	add_packages("openal-soft", "libsndfile", "lua")
-	if(is_plat("linux")) then
-		add_packages("libsndio")
-	end
 end

@@ -3,7 +3,6 @@
 #include "raymath.h"
 #include "rcamera.h"
 
-#include <AL/al.h>
 #include <cstdio>
 #include <engine.hpp>
 #include <sound.hpp>
@@ -23,10 +22,6 @@ int main(int argc, char **argv) {
 
 	SoundEngine::MusicBox musicBox = SoundEngine::MusicBox();
 	musicBox.setPosition(0.0, 1.0, 0.0);
-
-
-	SoundEngine::MusicBox musicBox2;
-	musicBox2.setPosition(10.0, 1.0, 0.0);
 
 	std::vector<WorldVariable> variables = musicBox.getWorldVariables();
 	for (WorldVariable variable : variables) {
@@ -58,7 +53,6 @@ int main(int argc, char **argv) {
 
 	while (!WindowShouldClose()) {
 		musicBox.update();
-		musicBox2.update();
 		Vector3 oldCameraPos = camera.position;
 		UpdateCamera(&camera, cameraMode);
 		Vector3 cameraVelocity = Vector3Subtract(camera.position, oldCameraPos);
